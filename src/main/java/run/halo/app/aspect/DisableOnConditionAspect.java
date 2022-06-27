@@ -31,11 +31,15 @@ public class DisableOnConditionAspect {
     @Pointcut("@annotation(run.halo.app.annotation.DisableOnCondition)")
     public void pointcut() {
     }
-
+    /*
+    * 这个写法不清楚
+    * */
     @Around("pointcut() && @annotation(disableApi)")
+    // TODO 将注解作为一个对象的类型，不理解
     public Object around(ProceedingJoinPoint joinPoint,
                          DisableOnCondition disableApi) throws Throwable {
         Mode mode = disableApi.mode();
+        //通过对两者的mode进行匹配判断能否访问
         if (haloProperties.getMode().equals(mode)) {
             throw new ForbiddenException("禁止访问");
         }

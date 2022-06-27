@@ -27,7 +27,7 @@ public @interface CacheLock {
 
     /**
      * Alias of prefix, default is ""
-     *
+     * 默认值为空
      * @return alias of prefix
      */
     @AliasFor("prefix")
@@ -42,28 +42,29 @@ public @interface CacheLock {
 
     /**
      * Time unit, default is TimeUnit.SECONDS.
-     *
+     * 时间的单位
      * @return time unit
      */
     TimeUnit timeUnit() default TimeUnit.SECONDS;
 
     /**
      * Delimiter, default is ':'
-     *
+     * 分隔符
      * @return delimiter
      */
     String delimiter() default ":";
 
     /**
      * Whether delete cache after method invocation.
-     *
+     * invocation 调用
+     * true为删除，false不删除
      * @return true if delete cache after method invocation; false otherwise
      */
     boolean autoDelete() default true;
 
     /**
      * Whether trace the request info.
-     *
+     * 跟踪请求的信息
      * @return true if trace the request info; false otherwise
      */
     boolean traceRequest() default false;

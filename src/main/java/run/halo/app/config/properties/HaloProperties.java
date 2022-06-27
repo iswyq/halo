@@ -13,7 +13,7 @@ import static run.halo.app.utils.HaloUtils.ensureSuffix;
 
 /**
  * Halo configuration properties.
- *
+ * Halo项目最基本的配置信息都在这里进行设置
  * @author johnniang
  * @author ryanwang
  * @date 2019-03-15
@@ -39,6 +39,7 @@ public class HaloProperties {
 
     /**
      * Halo startup mode.
+     * 这里是自定义的Enum类
      */
     private Mode mode = Mode.PRODUCTION;
 
@@ -48,7 +49,7 @@ public class HaloProperties {
     private String adminPath = "admin";
 
     /**
-     * Work directory.
+     * Work directory. 组合获得配置文件的路径
      */
     private String workDir = ensureSuffix(USER_HOME, FILE_SEPARATOR) + ".halo" + FILE_SEPARATOR;
 
@@ -69,11 +70,12 @@ public class HaloProperties {
 
     /**
      * Download Timeout.
+     * 时间使用了JDK8中的time类
      */
     private Duration downloadTimeout = Duration.ofSeconds(30);
 
     /**
-     * cache store impl
+     * cache store impl 缓存的模式
      * memory
      * level
      */

@@ -24,7 +24,7 @@ public class ServiceUtils {
      * Fetches id to set.
      *
      * @param datas           data collection
-     * @param mappingFunction calculate the id in data list
+     * @param mappingFunction calculate the id in data list  这是lambda表达式的元类型
      * @param <ID>            id type
      * @param <T>             data type
      * @return a set of id
@@ -33,7 +33,9 @@ public class ServiceUtils {
     public static <ID, T> Set<ID> fetchProperty(final Collection<T> datas, Function<T, ID> mappingFunction) {
         return CollectionUtils.isEmpty(datas) ?
             Collections.emptySet() :
+            //    map是需要一个方法来对流进行处理的。 Function类作为元类型，lambda表达式传入的就是一个方法
             datas.stream().map(mappingFunction).collect(Collectors.toSet());
+    //    Collection类的Stream方法将集合转换为流,流中的每个数据通过方法进行处理,最后在这里要转成set集合
     }
 
     /**

@@ -31,6 +31,7 @@ public class RedisCacheStore extends AbstractStringCacheStore {
      * Cache container.
      */
     private final static ConcurrentHashMap<String, CacheWrapper<String>> CACHE_CONTAINER = new ConcurrentHashMap<>();
+    // volatile从代码层面控制并发同步
     private volatile static JedisCluster REDIS;
     protected HaloProperties haloProperties;
     /**
@@ -67,6 +68,7 @@ public class RedisCacheStore extends AbstractStringCacheStore {
         if (nodes.isEmpty()) {
             nodes.add(new HostAndPort("127.0.0.1", 6379));
         }
+        // Redis的集群
         REDIS = new JedisCluster(nodes, 5, 20, 3, this.haloProperties.getCacheRedisPassword(), cfg);
         log.info("Initialized cache redis cluster: {}", REDIS.getClusterNodes());
     }

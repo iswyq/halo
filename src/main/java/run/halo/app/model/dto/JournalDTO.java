@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * Journal dto.
- *
+ * 日志/杂志
  * @author johnniang
  * @author ryanwang
  * @date 2019-04-24

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class MenuServiceImpl extends AbstractCrudService<Menu, Integer> implements MenuService {
 
-    private final MenuRepository menuRepository;
+    private final MenuRepository menuRepository;   //并不直接使用@AutoWired注解进行对象注入,而是在构造方法中重新赋值
 
     public MenuServiceImpl(MenuRepository menuRepository) {
         super(menuRepository);
@@ -64,7 +64,7 @@ public class MenuServiceImpl extends AbstractCrudService<Menu, Integer> implemen
             menuTeamVO.setTeam(team);
             menuTeamVO.setMenus(menuList);
 
-            // Add it to result
+            // Add it to result  这里lambda表达式使用了之外的属性，对象
             result.add(menuTeamVO);
         });
 

@@ -7,6 +7,7 @@ import run.halo.app.utils.ReflectionUtils;
 import java.io.Serializable;
 
 /**
+ * 用来生成一个合格的ID值  继承自hibernate
  * @author ryanwang
  * @date 2020-03-16
  */

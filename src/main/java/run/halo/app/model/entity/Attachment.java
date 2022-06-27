@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 /**
  * Attachment entity
+ * TODO 网上解释：以便将数据库中的数据集中到一个表中  对应了数据库中表Attachment
  *
  * @author ryanwang
  * @date 2019-03-12
@@ -18,8 +19,8 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "attachments",
-    indexes = {@Index(name = "attachments_media_type", columnList = "media_type"),
-        @Index(name = "attachments_create_time", columnList = "create_time")})
+        indexes = {@Index(name = "attachments_media_type", columnList = "media_type"),
+                @Index(name = "attachments_create_time", columnList = "create_time")})
 @ToString
 @EqualsAndHashCode(callSuper = true)
 public class Attachment extends BaseEntity {

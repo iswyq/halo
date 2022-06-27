@@ -18,7 +18,10 @@ import run.halo.app.security.context.SecurityContextHolder;
 @Component
 public class SensitiveConcealAspect {
 
-
+    /*
+     * 在这里对注解的功能进行实现
+     *
+     * */
     @Pointcut("@annotation(run.halo.app.annotation.SensitiveConceal)")
     public void pointCut() {
     }
@@ -44,7 +47,11 @@ public class SensitiveConcealAspect {
         }
 
         if (result instanceof Iterable) {
-
+            /*
+            * 将this直接传递到sensitiveMask方法中
+            *
+            * */
+            //TODO lamaboda表达式的运行过程不清楚
             ((Iterable<?>) result).forEach(this::sensitiveMask);
 
         }

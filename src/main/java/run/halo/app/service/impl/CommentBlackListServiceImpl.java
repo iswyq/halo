@@ -54,10 +54,12 @@ public class CommentBlackListServiceImpl extends AbstractCrudService<CommentBlac
         Date startTime = new Date(DateTimeUtils.toEpochMilli(now.minusMinutes(banTime)));
         Integer range = optionService.getByPropertyOrDefault(CommentProperties.COMMENT_RANGE, Integer.class, 30);
         boolean isPresent = postCommentRepository.countByIpAndTime(ipAddress, startTime, endTime) >= range;
+        // isPresent方法来自于optional类
         if (isPresent && blackList.isPresent()) {
             update(now, blackList.get(), banTime);
             return CommentViolationTypeEnum.FREQUENTLY;
         } else if (isPresent) {
+            // 使用builder模型进行对象的构造和属性赋值
             CommentBlackList commentBlackList = CommentBlackList
                 .builder()
                 .banTime(getBanTime(now, banTime))

@@ -72,6 +72,7 @@ public class JournalCommentServiceImpl extends BaseCommentServiceImpl<JournalCom
             .map(journalComment -> {
                 JournalCommentWithJournalVO journalCmtWithJournalVo = new JournalCommentWithJournalVO().convertFrom(journalComment);
                 journalCmtWithJournalVo.setJournal(new JournalDTO().convertFrom(journalMap.get(journalComment.getPostId())));
+                // 就获得了一个对象，继续往对象中设置一个属性
                 return journalCmtWithJournalVo;
             })
             .collect(Collectors.toList());

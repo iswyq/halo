@@ -8,6 +8,7 @@ import run.halo.app.model.dto.MenuDTO;
 import java.util.List;
 
 /**
+ * TODO View Object
  * @author ryanwang
  * @date 2019-04-07
  */

@@ -35,6 +35,7 @@ public class HaloConfiguration {
     @Autowired
     HaloProperties haloProperties;
 
+    // 使用了设计模式
     @Bean
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
         builder.failOnEmptyBeans(false);
@@ -43,15 +44,17 @@ public class HaloConfiguration {
 
     @Bean
     public RestTemplate httpsRestTemplate(RestTemplateBuilder builder)
-        throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+            throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         RestTemplate httpsRestTemplate = builder.build();
         httpsRestTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(HttpClientUtils.createHttpsClient(
-            (int) haloProperties.getDownloadTimeout().toMillis())));
+                (int) haloProperties.getDownloadTimeout().toMillis())));
         return httpsRestTemplate;
     }
 
+    // 使用条件加载 如果用户没有自定义配置，则加载这个类作为Bean
     @Bean
     @ConditionalOnMissingBean
+    // 返回缓存的存储方式
     public AbstractStringCacheStore stringCacheStore() {
         AbstractStringCacheStore stringCacheStore;
         switch (haloProperties.getCache()) {
@@ -62,6 +65,7 @@ public class HaloConfiguration {
                 stringCacheStore = new RedisCacheStore(this.haloProperties);
                 break;
             case "memory":
+                // 这里没写
             default:
                 //memory or default
                 stringCacheStore = new InMemoryCacheStore();

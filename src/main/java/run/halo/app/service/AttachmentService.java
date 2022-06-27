@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * Attachment service.
- *
+ * // TODO 不知道这个干吗用的  Attachment不知道干嘛用
  * @author johnniang
  * @date 2019-03-14
  */
@@ -45,7 +45,7 @@ public interface AttachmentService extends CrudService<Attachment, Integer> {
 
     /**
      * Removes attachment permanently.
-     *
+     * 永久删除
      * @param id attachment id must not be null
      * @return attachment detail deleted
      */

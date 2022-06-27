@@ -47,6 +47,7 @@ public class SwaggerConfiguration {
     private final HaloProperties haloProperties;
 
     private final List<ResponseMessage> globalResponses = Arrays.asList(
+            // 将基本的信息放入到List当中  ResponseMessageBuilder 由Spring提供
         new ResponseMessageBuilder().code(200).message("Success").build(),
         new ResponseMessageBuilder().code(400).message("Bad request").build(),
         new ResponseMessageBuilder().code(401).message("Unauthorized").build(),
@@ -59,8 +60,10 @@ public class SwaggerConfiguration {
     }
 
     @Bean
+    // Docket是由Spring提供 TODO 这个类不清楚
     public Docket haloDefaultApi() {
         if (haloProperties.isDocDisabled()) {
+            // 文档被禁止
             log.debug("Doc has been disabled");
         }
 
@@ -87,6 +90,7 @@ public class SwaggerConfiguration {
     }
 
     @Bean
+    // 没有修饰符
     SecurityConfiguration security() {
         return SecurityConfigurationBuilder.builder()
             .clientId("halo-app-client-id")
@@ -120,6 +124,7 @@ public class SwaggerConfiguration {
     }
 
     private List<ApiKey> adminApiKeys() {
+        // TODO Arrays.asList这个方法应该挺好用的
         return Arrays.asList(
             new ApiKey("Token from header", ADMIN_TOKEN_HEADER_NAME, In.HEADER.name()),
             new ApiKey("Token from query", ADMIN_TOKEN_QUERY_NAME, In.QUERY.name())

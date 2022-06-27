@@ -18,15 +18,18 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public abstract class AbstractStringCacheStore extends AbstractCacheStore<String, String> {
+
     protected Optional<CacheWrapper<String>> jsonToCacheWrapper(String json) {
         Assert.hasText(json, "json value must not be null");
         CacheWrapper<String> cacheWrapper = null;
         try {
+            // TODO 这个方法好用，直接将json转换成指定的对象
             cacheWrapper = JsonUtils.jsonToObject(json, CacheWrapper.class);
         } catch (IOException e) {
             e.printStackTrace();
-            log.debug("Failed to convert json to wrapper value bytes: [{}]", json, e);
+            log.debug("Failed to convert json [{}] to wrapper value bytes", json, e);
         }
+        //包装成一个Optional类
         return Optional.ofNullable(cacheWrapper);
     }
 
@@ -51,6 +54,7 @@ public abstract class AbstractStringCacheStore extends AbstractCacheStore<String
 
         return get(key).map(value -> {
             try {
+                // 转换成type类型
                 return JsonUtils.jsonToObject(value, type);
             } catch (IOException e) {
                 log.error("Failed to convert json to type: " + type.getName(), e);

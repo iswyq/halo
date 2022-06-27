@@ -12,7 +12,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Abstract cache store.
- *
+ * 定义抽象类的缓存
+ * 是一种实现方式，定义基本的方法
+ * 该类中的方法直接调用抽象方法，那么在子类实现抽象方法后，在本类中调用抽象方法的方法自然可以用
  * @author johnniang
  * @date 3/28/19
  */
@@ -38,6 +40,7 @@ public abstract class AbstractCacheStore<K, V> implements CacheStore<K, V> {
 
     /**
      * Puts the cache wrapper if the key is absent.
+     * 不写具体的实现，只声明一个方法，留给子类来具体实现
      *
      * @param key          key must not be null
      * @param cacheWrapper cache wrapper must not be null
@@ -49,13 +52,15 @@ public abstract class AbstractCacheStore<K, V> implements CacheStore<K, V> {
     public Optional<V> get(K key) {
         Assert.notNull(key, "Cache key must not be blank");
 
+        // lambda表达式传入，直接使用
+        // optional的流处理
         return getInternal(key).map(cacheWrapper -> {
-            // Check expiration
+            // Check expiration  比较缓存的到期时间是否在当前时间之前
             if (cacheWrapper.getExpireAt() != null && cacheWrapper.getExpireAt().before(run.halo.app.utils.DateUtils.now())) {
                 // Expired then delete it
                 log.warn("Cache key: [{}] has been expired", key);
 
-                // Delete the key
+                // Delete the key 如果已经过期，删除
                 delete(key);
 
                 // Return null
@@ -73,6 +78,7 @@ public abstract class AbstractCacheStore<K, V> implements CacheStore<K, V> {
 
     @Override
     public Boolean putIfAbsent(K key, V value, long timeout, TimeUnit timeUnit) {
+        // 直接调用抽象方法，说明有这么个事儿；但是不进行具体实现。
         return putInternalIfAbsent(key, buildCacheWrapper(value, timeout, timeUnit));
     }
 
@@ -83,15 +89,17 @@ public abstract class AbstractCacheStore<K, V> implements CacheStore<K, V> {
 
     /**
      * Builds cache wrapper.
+     * 这是一种设计模式，类似于构造模式；不是构造器方法
      *
      * @param value    cache value must not be null
      * @param timeout  the key expiry time, if the expiry time is less than 1, the cache won't be expired
-     * @param timeUnit timeout unit must
+     * @param timeUnit timeout unit must 时间的基本单位，时，分，秒，毫秒。conCurrent包下的Enum
      * @return cache wrapper
      */
     @NonNull
     private CacheWrapper<V> buildCacheWrapper(@NonNull V value, long timeout, @Nullable TimeUnit timeUnit) {
         Assert.notNull(value, "Cache value must not be null");
+        //timeout设置大于0会通过
         Assert.isTrue(timeout >= 0, "Cache expiration timeout must not be less than 1");
 
         Date now = run.halo.app.utils.DateUtils.now();

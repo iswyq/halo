@@ -60,15 +60,18 @@ public class DateUtils {
 
         int timeIntValue;
 
+        // 比较是否为一个最大值
         if (time > Integer.MAX_VALUE) {
             timeIntValue = Integer.MAX_VALUE;
         } else {
+            // 先转成Long类型，在转成int类型；保证精度
             timeIntValue = Long.valueOf(time).intValue();
         }
 
         // Calc the expiry time
         switch (timeUnit) {
             case DAYS:
+                // 调用方法添加
                 result = org.apache.commons.lang3.time.DateUtils.addDays(date, timeIntValue);
                 break;
             case HOURS:

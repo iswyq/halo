@@ -24,7 +24,7 @@ public interface AdminService {
     int ACCESS_TOKEN_EXPIRED_SECONDS = 24 * 3600;
 
     int REFRESH_TOKEN_EXPIRED_DAYS = 30;
-
+    // 配置文件的名字
     String APPLICATION_CONFIG_NAME = "application.yaml";
 
     String LOG_PATH = "logs/spring.log";
@@ -40,7 +40,7 @@ public interface AdminService {
 
     /**
      * Check authCode and build authToken.
-     *
+     * 检查授权码
      * @param loginParam login param must not be null
      * @return User
      */
@@ -54,7 +54,7 @@ public interface AdminService {
 
     /**
      * Send reset password code to administrator's email.
-     *
+     * 发送重置密码的连接
      * @param param param must not be null
      */
     void sendResetPasswordCode(@NonNull ResetPasswordParam param);

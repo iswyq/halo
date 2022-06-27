@@ -12,7 +12,7 @@ import javax.persistence.*;
 
 /**
  * Setting entity.
- *
+ * 记录用户操作的表 如：optional_key：blog_title  optional_value:我的博客
  * @author johnniang
  * @author ryanwang
  * @date 2019-03-20

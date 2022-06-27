@@ -14,7 +14,7 @@ import java.util.Optional;
 
 /**
  * CrudService interface contains some common methods.
- *
+ * 增删改查的通用方法都在这里
  * @param <DOMAIN> domain type
  * @param <ID>     id type
  * @author johnniang

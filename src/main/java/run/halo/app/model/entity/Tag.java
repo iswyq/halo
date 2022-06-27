@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 /**
  * Tag entity
- *
+ * 对应了文章的标签
  * @author ryanwang
  * @date 2019-03-12
  */

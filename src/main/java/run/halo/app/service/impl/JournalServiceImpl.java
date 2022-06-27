@@ -121,10 +121,12 @@ public class JournalServiceImpl extends AbstractCrudService<Journal, Integer> im
         return journals.stream()
             .map(journal -> {
                 JournalWithCmtCountDTO journalWithCmtCountDTO = new JournalWithCmtCountDTO().convertFrom(journal);
-                // Set comment count
+                // 很好理解：首先new一个泛型对象，在泛型对象中添加属性，然后泛型对象返回
                 journalWithCmtCountDTO.setCommentCount(journalCommentCountMap.getOrDefault(journal.getId(), 0L));
+                //在这里控制了泛型
                 return journalWithCmtCountDTO;
             })
+            //    collect方法将流转换为某一个具体的集合
             .collect(Collectors.toList());
     }
 
@@ -135,7 +137,7 @@ public class JournalServiceImpl extends AbstractCrudService<Journal, Integer> im
         // Convert
         List<JournalWithCmtCountDTO> journalWithCmtCountDTOS = convertToCmtCountDto(journalPage.getContent());
 
-        // Build and return
+        // Build and return  直接可以推断泛型的类型
         return new PageImpl<>(journalWithCmtCountDTOS, journalPage.getPageable(), journalPage.getTotalElements());
     }
 

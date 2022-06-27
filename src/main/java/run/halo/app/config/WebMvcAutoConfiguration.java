@@ -64,16 +64,17 @@ public class WebMvcAutoConfiguration extends WebMvcConfigurationSupport {
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.stream()
-            .filter(c -> c instanceof MappingJackson2HttpMessageConverter)
-            .findFirst()
-            .ifPresent(converter -> {
-                MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) converter;
-                Jackson2ObjectMapperBuilder builder = Jackson2ObjectMapperBuilder.json();
-                JsonComponentModule module = new JsonComponentModule();
-                module.addSerializer(PageImpl.class, new PageJacksonSerializer());
-                ObjectMapper objectMapper = builder.modules(module).build();
-                mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
-            });
+                // 将MappingJackson2HttpMessageConverter的实例作为过滤条件
+                .filter(c -> c instanceof MappingJackson2HttpMessageConverter)
+                .findFirst()
+                .ifPresent(converter -> {
+                    MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) converter;
+                    Jackson2ObjectMapperBuilder builder = Jackson2ObjectMapperBuilder.json();
+                    JsonComponentModule module = new JsonComponentModule();
+                    module.addSerializer(PageImpl.class, new PageJacksonSerializer());
+                    ObjectMapper objectMapper = builder.modules(module).build();
+                    mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
+                });
     }
 
     @Override
@@ -85,6 +86,7 @@ public class WebMvcAutoConfiguration extends WebMvcConfigurationSupport {
 
     /**
      * Configuring static resource path
+     * 设置静态资源不拦截
      *
      * @param registry registry
      */
@@ -94,27 +96,27 @@ public class WebMvcAutoConfiguration extends WebMvcConfigurationSupport {
 
         // register /** resource handler.
         registry.addResourceHandler("/**")
-            .addResourceLocations("classpath:/admin/")
-            .addResourceLocations(workDir + "static/");
+                .addResourceLocations("classpath:/admin/")
+                .addResourceLocations(workDir + "static/");
 
         // register /themes/** resource handler.
         registry.addResourceHandler("/themes/**")
-            .addResourceLocations(workDir + "templates/themes/");
+                .addResourceLocations(workDir + "templates/themes/");
 
         String uploadUrlPattern = ensureBoth(haloProperties.getUploadUrlPrefix(), URL_SEPARATOR) + "**";
         String adminPathPattern = ensureSuffix(haloProperties.getAdminPath(), URL_SEPARATOR) + "**";
 
         registry.addResourceHandler(uploadUrlPattern)
-            .addResourceLocations(workDir + "upload/");
+                .addResourceLocations(workDir + "upload/");
         registry.addResourceHandler(adminPathPattern)
-            .addResourceLocations("classpath:/admin/");
+                .addResourceLocations("classpath:/admin/");
 
         if (!haloProperties.isDocDisabled()) {
             // If doc is enable
             registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
+                    .addResourceLocations("classpath:/META-INF/resources/");
             registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+                    .addResourceLocations("classpath:/META-INF/resources/webjars/");
         }
     }
 
@@ -137,19 +139,21 @@ public class WebMvcAutoConfiguration extends WebMvcConfigurationSupport {
 
         Properties properties = new Properties();
         properties.setProperty("auto_import", "/common/macro/common_macro.ftl as common,/common/macro/global_macro.ftl as global");
-
+        // 将properties对象添加到FreeMarkerConfigure对象中
         configurer.setFreemarkerSettings(properties);
 
-        // Predefine configuration
+        // Predefine configuration  Spring中定义的configurer对象转换到freemarker中自己适用的configure
         freemarker.template.Configuration configuration = configurer.createConfiguration();
 
+        // 设定Resolver
         configuration.setNewBuiltinClassResolver(TemplateClassResolver.SAFER_RESOLVER);
 
         if (haloProperties.isProductionEnv()) {
+            // 如果是生产环境，还加上错误处理的Handler
             configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         }
 
-        // Set predefined freemarker configuration
+        // Set predefined freemarker configuration  最后还是换到Spring中的管理
         configurer.setConfiguration(configuration);
 
         return configurer;
@@ -162,6 +166,7 @@ public class WebMvcAutoConfiguration extends WebMvcConfigurationSupport {
      */
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
+        // 通过freemarker的视图处理
         FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
         resolver.setAllowRequestOverride(false);
         resolver.setCache(false);

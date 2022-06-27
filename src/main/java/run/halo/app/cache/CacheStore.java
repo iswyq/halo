@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Cache store interface.
+ * 缓存的接口
+ * 通过Key Value的方式进行存储
  *
  * @param <K> cache key type
  * @param <V> cache value type

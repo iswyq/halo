@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * Cache wrapper.
- *
+ * 缓存的实体包装类，将常用信息包装
  * @author johnniang
  */
 @Data

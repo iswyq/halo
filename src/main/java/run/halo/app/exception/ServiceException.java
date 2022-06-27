@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 /**
  * Exception caused by service.
- *
+ * 针对service层中出现错误则抛这个错误
  * @author johnniang
  */
 public class ServiceException extends AbstractHaloException {

@@ -94,7 +94,7 @@ public class CacheLockInterceptor {
             cacheKeyBuilder.append(methodSignature.getMethod().toString());
         }
 
-        // Handle cache lock key building
+        // Handle cache lock key building  获得所有标注的注解
         Annotation[][] parameterAnnotations = methodSignature.getMethod().getParameterAnnotations();
 
         for (int i = 0; i < parameterAnnotations.length; i++) {

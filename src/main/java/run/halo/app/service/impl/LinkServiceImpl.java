@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * LinkService implementation class
- *
+ * link相关的service
  * @author ryanwang
  * @date 2019-03-14
  */

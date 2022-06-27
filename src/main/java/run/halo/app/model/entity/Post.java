@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 
 /**
  * Post entity.
- *
+ * 文章实体
  * @author johnniang
  */
 @Entity(name = "Post")

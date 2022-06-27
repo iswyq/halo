@@ -16,7 +16,8 @@ import java.util.Date;
 @Entity
 @Table(name = "comment_black_list")
 @EqualsAndHashCode(callSuper = true)
-@Builder
+@Builder  // @Builder，就是为 java bean 生成一个构建器。Builder 模式 又被称作 建造者模式 或者 生成器模式.是一种设计模式
+// builder相关知识 https://zhuanlan.zhihu.com/p/83219997
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentBlackList extends BaseEntity {

@@ -114,7 +114,7 @@ public class FileUtils {
         mustBeEmpty(targetPath);
 
         ZipEntry zipEntry = zis.getNextEntry();
-
+        // 挨个读取压缩包中的文件
         while (zipEntry != null) {
             // Resolve the entry path
             Path entryPath = targetPath.resolve(zipEntry.getName());
@@ -141,6 +141,7 @@ public class FileUtils {
             List<File> propertyFiles = Arrays.asList(files.get(0).listFiles());
             for (File propertyFile : propertyFiles) {
                 String filePath = propertyFile.toPath().toString();
+                // TODO 这个destPath有bug  windows下.文件名与.文件夹名不能重名
                 String destPath = filePath.replace(rootFile, "");
                 Files.copy(propertyFile.toPath(), Paths.get(destPath));
             }

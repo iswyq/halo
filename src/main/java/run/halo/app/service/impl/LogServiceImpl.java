@@ -23,6 +23,7 @@ public class LogServiceImpl extends AbstractCrudService<Log, Long> implements Lo
     private final LogRepository logRepository;
 
     public LogServiceImpl(LogRepository logRepository) {
+        // 调用他老爸对应的构造方法
         super(logRepository);
         this.logRepository = logRepository;
     }

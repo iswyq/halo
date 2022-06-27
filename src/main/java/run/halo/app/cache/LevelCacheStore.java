@@ -19,6 +19,9 @@ import java.util.*;
 
 /**
  * level-db cache store
+ * levelDB 是Google开发的一个键值型的数据库
+ * LevelDB的数据是存储在磁盘上的，采用LSM-Tree的结构实现。LSM-Tree将磁盘的随机写转化为顺序写，从而大大提高了写速度。
+ * 数据库级别的缓存
  * Create by Pencilso on 2020/1/9 7:20 下午
  */
 @Slf4j
@@ -35,7 +38,7 @@ public class LevelCacheStore extends AbstractStringCacheStore {
     @Autowired
     private HaloProperties haloProperties;
 
-    @PostConstruct
+    @PostConstruct // 构造完成后执行的方法
     public void init() {
         if (LEVEL_DB != null) {
             return;

@@ -63,11 +63,12 @@ import static run.halo.app.model.support.HaloConst.*;
  * @author johnniang
  * @author ryanwang
  * @date 2019-04-29
+ * TODO ApplicationContext 通过 ApplicationEvent 类和 ApplicationListener 接口进行事件处理。 如果将实现 ApplicationListener 接口的 bean 注入到上下文中，则每次使用 ApplicationContext 发布 ApplicationEvent 时，都会通知该 bean。本质上，这是标准的观察者设计模式。
  */
 @Slf4j
 @Service
 public class AdminServiceImpl implements AdminService {
-
+    // 这里都是接口类型的变量
     private final PostService postService;
 
     private final SheetService sheetService;
@@ -93,9 +94,9 @@ public class AdminServiceImpl implements AdminService {
     private final RestTemplate restTemplate;
 
     private final HaloProperties haloProperties;
-
+    // TODO Spring对事件的处理
     private final ApplicationEventPublisher eventPublisher;
-
+    // 这里是具体实现类的变量，对应进行初始化
     public AdminServiceImpl(PostService postService,
                             SheetService sheetService,
                             AttachmentService attachmentService,
@@ -138,11 +139,12 @@ public class AdminServiceImpl implements AdminService {
         final User user;
 
         try {
-            // Get user by username or email
+            // Get user by username or email  根据用户名校验是否为Email的形式。
             user = Validator.isEmail(username) ?
                 userService.getByEmailOfNonNull(username) : userService.getByUsernameOfNonNull(username);
         } catch (NotFoundException e) {
             log.error("Failed to find user by name: " + username, e);
+            // 对事件进行监听  对日志事件进行监听
             eventPublisher.publishEvent(new LogEvent(this, loginParam.getUsername(), LogType.LOGIN_FAILED, loginParam.getUsername()));
 
             throw new BadRequestException(mismatchTip);
@@ -170,9 +172,10 @@ public class AdminServiceImpl implements AdminService {
             if (StrUtil.isBlank(loginParam.getAuthcode())) {
                 throw new BadRequestException("请输入两步验证码");
             }
+            // 两步验证码
             TwoFactorAuthUtils.validateTFACode(user.getMfaKey(), loginParam.getAuthcode());
         }
-
+        // Spring Security
         if (SecurityContextHolder.getContext().isAuthenticated()) {
             // If the user has been logged in
             throw new BadRequestException("您已登录，请不要重复登录");
@@ -181,13 +184,13 @@ public class AdminServiceImpl implements AdminService {
         // Log it then login successful
         eventPublisher.publishEvent(new LogEvent(this, user.getUsername(), LogType.LOGGED_IN, user.getNickname()));
 
-        // Generate new token
+        // Generate new token 返回Token
         return buildAuthToken(user);
     }
 
     @Override
     public void clearToken() {
-        // Check if the current is logging in
+        // Check if the current is logging in 通过容器拿登录后的账户
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null) {
@@ -199,7 +202,7 @@ public class AdminServiceImpl implements AdminService {
 
         // Clear access token
         cacheStore.getAny(SecurityUtils.buildAccessTokenKey(user), String.class).ifPresent(accessToken -> {
-            // Delete token
+            // Delete token TODO 顶层接口中的delete方法没有具体的实现 delete 在此时就是壳子方法
             cacheStore.delete(SecurityUtils.buildTokenAccessKey(accessToken));
             cacheStore.delete(SecurityUtils.buildAccessTokenKey(user));
         });
@@ -277,6 +280,10 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    /**
+     * 返回一些数据的统计结果
+     */
     public StatisticDTO getCount() {
         StatisticDTO statisticDTO = new StatisticDTO();
         statisticDTO.setPostCount(postService.countByStatus(PostStatus.PUBLISHED) + sheetService.countByStatus(PostStatus.PUBLISHED));
@@ -303,6 +310,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public EnvironmentDTO getEnvironments() {
+        // 有关于博客创建的相关环境信息
         EnvironmentDTO environmentDTO = new EnvironmentDTO();
 
         // Get application start time.
@@ -342,7 +350,7 @@ public class AdminServiceImpl implements AdminService {
     public void updateAdminAssets() {
         // Request github api
         ResponseEntity<Map> responseEntity = restTemplate.getForEntity(HaloConst.HALO_ADMIN_RELEASES_LATEST, Map.class);
-
+        // 这里优先校验引用是否为空
         if (responseEntity == null ||
             responseEntity.getStatusCode().isError() ||
             responseEntity.getBody() == null) {
@@ -359,6 +367,7 @@ public class AdminServiceImpl implements AdminService {
         try {
             List assets = (List) assetsObject;
             Map assetMap = (Map) assets.stream()
+                //    这里的predicate与lambda表达式的语法有关
                 .filter(assetPredicate())
                 .findFirst()
                 .orElseThrow(() -> new ServiceException("Halo admin 最新版暂无资源文件，请稍后再试"));
@@ -397,6 +406,7 @@ public class AdminServiceImpl implements AdminService {
     @NonNull
     @SuppressWarnings("unchecked")
     private Predicate<Object> assetPredicate() {
+        // TODO 这里asset的确是传过来，但是没有他的任何信息；在后面还进行了一个强制转换
         return asset -> {
             if (!(asset instanceof Map)) {
                 return false;

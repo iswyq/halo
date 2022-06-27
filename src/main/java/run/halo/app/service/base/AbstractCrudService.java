@@ -18,7 +18,8 @@ import java.util.Optional;
 
 /**
  * Abstract service implementation.
- *
+ * 基本的增删改查都在这里
+ * 专门写了一个接口记录CRUD的方法
  * @param <DOMAIN> domain type
  * @param <ID>     id type
  * @author johnniang
@@ -27,7 +28,7 @@ import java.util.Optional;
 public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOMAIN, ID> {
 
     private final String domainName;
-
+    // 自定义的dao接口 继承了JpaRepository
     private final BaseRepository<DOMAIN, ID> repository;
 
     protected AbstractCrudService(BaseRepository<DOMAIN, ID> repository) {
@@ -100,7 +101,7 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
 
     /**
      * List all by ids and sort
-     *
+     * 使用三元运算符在不为空的情况下执行方法
      * @param ids  ids
      * @param sort sort
      * @return List
@@ -186,14 +187,14 @@ public abstract class AbstractCrudService<DOMAIN, ID> implements CrudService<DOM
 
     /**
      * save by domain
-     *
+     * TODO 这个方法上下都有实现，既是对接口中的方法的实现，下面也对其进行了实现 在java中创建，也即在数据库中保存
      * @param domain domain
      * @return DOMAIN
      */
     @Override
     public DOMAIN create(DOMAIN domain) {
         Assert.notNull(domain, domainName + " data must not be null");
-
+        // save方法将对象保存到数据库中，并返回这个被保存的对象
         return repository.save(domain);
     }
 

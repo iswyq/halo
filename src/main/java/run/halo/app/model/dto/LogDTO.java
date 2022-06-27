@@ -11,6 +11,7 @@ import java.util.Date;
 
 /**
  * @author johnniang
+ * TODO DTO相关的对象都是用来传输的，并没有对应到数据库中的表
  * @date 3/19/19
  */
 @Data

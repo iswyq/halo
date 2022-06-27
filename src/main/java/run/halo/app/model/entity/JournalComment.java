@@ -12,5 +12,5 @@ import javax.persistence.Entity;
 @Entity(name = "JournalComment")
 @DiscriminatorValue("2")
 public class JournalComment extends BaseComment {
-
+// getPostId 来源于BaseComment
 }

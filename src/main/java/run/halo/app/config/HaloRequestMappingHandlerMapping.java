@@ -23,6 +23,8 @@ import static run.halo.app.utils.HaloUtils.ensureBoth;
 /**
  * @author ryanwang
  * @date 2020-03-24
+ * 使用到了Spring容器的加载过程相关知识,对加载的事件进行监听
+ * RequestMappingHandlerMapping
  */
 @Slf4j
 public class HaloRequestMappingHandlerMapping extends RequestMappingHandlerMapping implements ApplicationListener<StaticStorageChangedEvent> {
@@ -52,6 +54,7 @@ public class HaloRequestMappingHandlerMapping extends RequestMappingHandlerMappi
     }
 
     private void initBlackPatterns() {
+        // 上传路径的设置
         String uploadUrlPattern = ensureBoth(haloProperties.getUploadUrlPrefix(), URL_SEPARATOR) + "**";
         String adminPathPattern = ensureBoth(haloProperties.getAdminPath(), URL_SEPARATOR) + "?*/**";
 
@@ -70,8 +73,10 @@ public class HaloRequestMappingHandlerMapping extends RequestMappingHandlerMappi
     }
 
     @Override
+    // 这里是对事件的实现了
     public void onApplicationEvent(StaticStorageChangedEvent event) {
         Path staticPath = event.getStaticPath();
+        // TODO 这个try语句里面的语法是干什么的
         try (Stream<Path> rootPathStream = Files.list(staticPath)) {
             synchronized (this) {
                 blackPatterns.clear();
@@ -80,6 +85,7 @@ public class HaloRequestMappingHandlerMapping extends RequestMappingHandlerMappi
                         if (Files.isDirectory(rootPath)) {
                             String directoryPattern = "/" + rootPath.getFileName().toString() + "/**";
                             blackPatterns.add(directoryPattern);
+                            // 排除路径
                             log.debug("Exclude for folder path pattern: [{}]", directoryPattern);
                         } else {
                             String pathPattern = "/" + rootPath.getFileName().toString();
